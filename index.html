@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CashFlow Tracker</title>
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="CashFlow">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="theme-color" content="#0c0c0e">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%230c0c0e'/%3E%3Ctext x='32' y='44' font-size='36' text-anchor='middle' fill='%2322d3a0'%3E%24%3C/text%3E%3C/svg%3E">
+<link rel="apple-touch-icon" href="icons/icon-180.png">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.19.0/dist/tabler-icons.min.css">
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<!-- Overlay -->
+<div id="overlay" onclick="closePanel()"></div>
+
+<!-- Color panel -->
+<div id="colorPanel">
+  <div class="cp-hdr">
+    <span class="cp-title">🎨 Couleurs</span>
+    <button class="cp-close" onclick="closePanel()"><i class="ti ti-x"></i></button>
+  </div>
+  <div class="cp-sec">
+    <div class="cp-sec-title">Positif / Négatif</div>
+    <div class="cp-row"><span class="cp-lbl">Gains &amp; positif</span><label class="cp-swatch" id="sw-pos"><div class="cp-swatch-preview"></div><input type="color" oninput="setColor('pos',this.value)"></label></div>
+    <div class="cp-row"><span class="cp-lbl">Pertes &amp; négatif</span><label class="cp-swatch" id="sw-neg"><div class="cp-swatch-preview"></div><input type="color" oninput="setColor('neg',this.value)"></label></div>
+  </div>
+  <div class="cp-sec">
+    <div class="cp-sec-title">Courbes PNL</div>
+    <div class="cp-row"><span class="cp-lbl">PNL cumulé</span><label class="cp-swatch" id="sw-c0"><div class="cp-swatch-preview"></div><input type="color" oninput="setChart(0,this.value)"></label></div>
+    <div class="cp-row"><span class="cp-lbl">Trading</span><label class="cp-swatch" id="sw-c2"><div class="cp-swatch-preview"></div><input type="color" oninput="setChart(2,this.value)"></label></div>
+  </div>
+  <div class="cp-sec">
+    <div class="cp-sec-title">Catégories</div>
+    <div id="catSwatches"></div>
+  </div>
+  <button class="cp-reset" onclick="resetColors()"><i class="ti ti-refresh" style="margin-right:6px"></i>Réinitialiser</button>
+</div>
+
+<!-- FAB -->
+<button class="fab" onclick="openPanel()"><i class="ti ti-palette"></i></button>
+
+<div class="app">
+
+  <!-- Logo / top bar -->
+  <div class="top-bar">
+    <div class="logo">cash<span>flow</span></div>
+    <div style="display:flex;align-items:center;gap:12px">
+      <div class="yr-switch" id="yrSwitch"></div>
+      <button class="save-btn" id="saveBtn" onclick="saveToFile()"><i class="ti ti-device-floppy"></i>Sauvegarder</button>
+    </div>
+  </div>
+  <div class="toast" id="toast">✓ Fichier sauvegardé !</div>
+
+  <!-- Nav -->
+  <nav class="nav">
+    <button class="nb on" onclick="goTab(0,this)"><i class="ti ti-layout-cards"></i>Catégories</button>
+    <button class="nb"    onclick="goTab(1,this)"><i class="ti ti-chart-line"></i>PNL</button>
+    <button class="nb"    onclick="goTab(2,this)"><i class="ti ti-safe"></i>Fortune</button>
+    <button class="nb"    onclick="goTab(3,this)"><i class="ti ti-table-options"></i>Données</button>
+    <button class="nb"    onclick="goTab(4,this)"><i class="ti ti-plus"></i>Ajouter</button>
+  </nav>
+
+  <!-- ══ PAGE 0 : Catégories ══════════════════════════════ -->
+  <div class="pg on" id="tab0">
+    <div class="sec-hdr">
+      <div><div class="sec-title">Par catégorie</div><div class="sec-sub">Totaux & dernières transactions</div></div>
+    </div>
+    <div class="cards-grid" id="kpi0" style="margin-bottom:1.5rem"></div>
+  </div>
+
+  <!-- ══ PAGE 1 : PNL ═════════════════════════════════════ -->
+  <div class="pg" id="tab1">
+    <div class="sec-hdr">
+      <div><div class="sec-title">Courbe PNL</div><div class="sec-sub">Profit &amp; loss mensuel et cumulé</div></div>
+    </div>
+    <div class="kpi-row" id="kpi1"></div>
+    <div class="chart-box" style="margin-bottom:1.5rem">
+      <div class="chart-legend" id="pnlLegend"></div>
+      <div style="position:relative;height:320px">
+        <canvas id="pnlCanvas"></canvas>
+      </div>
+    </div>
+
+    <div class="chart-box" style="margin-bottom:1.5rem">
+      <div style="font-size:12px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--txt3);margin-bottom:1rem">Évolution de la fortune</div>
+      <div style="position:relative;height:280px">
+        <canvas id="fortAreaCanvas"></canvas>
+      </div>
+    </div>
+
+    <div class="chart-box">
+      <div style="font-size:12px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--txt3);margin-bottom:1rem">Cumul mois par mois</div>
+      <div style="position:relative;height:220px">
+        <canvas id="fortCanvas"></canvas>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ PAGE 2 : Fortune ═════════════════════════════════ -->
+  <div class="pg" id="tab2">
+    <div class="sec-hdr">
+      <div><div class="sec-title">Fortune nette</div></div>
+    </div>
+    <div class="fort-split" id="fortSplit"></div>
+
+    <div class="chart-box" style="margin-bottom:1.5rem">
+      <div style="font-size:12px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--txt3);margin-bottom:1rem">Répartition des revenus</div>
+      <div class="pie-wrap">
+        <div style="position:relative;height:240px;width:240px;flex-shrink:0">
+          <canvas id="pieCanvas"></canvas>
+        </div>
+        <div class="pie-legend" id="pieLegend"></div>
+      </div>
+    </div>
+
+    <div class="fort-rows" id="fortRows"></div>
+  </div>
+
+  <!-- ══ PAGE 3 : Données ════════════════════════════════ -->
+  <div class="pg" id="tab3">
+    <div class="sec-hdr">
+      <div><div class="sec-title">Toutes les données</div><div class="sec-sub">Clique sur un champ pour le modifier directement</div></div>
+    </div>
+    <div id="dataTable"></div>
+  </div>
+
+  <!-- ══ PAGE 4 : Ajouter ═════════════════════════════════ -->
+  <div class="pg" id="tab4">
+    <div class="sec-hdr">
+      <div><div class="sec-title">Ajouter une transaction</div><div class="sec-sub">Enregistre un revenu, un trade, une dépense ou tout autre mouvement</div></div>
+    </div>
+    <div class="add-box">
+      <div class="add-grid">
+        <div>
+          <div class="field-label">Catégorie</div>
+          <div style="display:flex;gap:8px">
+            <div class="custom-select" id="aCatWrap">
+              <button type="button" class="custom-select-trigger" onclick="toggleCatDropdown()">
+                <span id="aCatLabel">Revenus</span>
+                <i class="ti ti-chevron-down"></i>
+              </button>
+              <div class="custom-select-menu" id="aCatMenu" style="display:none"></div>
+            </div>
+            <input type="hidden" id="aCat" value="revenus">
+            <button type="button" class="yr-edit-btn" onclick="toggleNewCat()" title="Ajouter une nouvelle catégorie"><i class="ti ti-plus"></i></button>
+          </div>
+        </div>
+        <div>
+          <div class="field-label">Description</div>
+          <input id="aDesc" type="text" placeholder="ex : Salaire">
+        </div>
+        <div>
+          <div class="field-label">Mois</div>
+          <select id="aMon">
+            <option value="0">Janvier</option><option value="1">Février</option><option value="2">Mars</option>
+            <option value="3">Avril</option><option value="4">Mai</option><option value="5">Juin</option>
+            <option value="6">Juillet</option><option value="7">Août</option><option value="8">Septembre</option>
+            <option value="9">Octobre</option><option value="10">Novembre</option><option value="11">Décembre</option>
+          </select>
+        </div>
+        <div>
+          <div class="field-label">Montant (€)</div>
+          <input id="aAmt" type="number" placeholder="0">
+        </div>
+      </div>
+
+      <div class="new-cat-box" id="newCatBox" style="display:none">
+        <div class="add-grid" style="margin-bottom:12px">
+          <div>
+            <div class="field-label">Nom de la nouvelle catégorie</div>
+            <input id="ncName" type="text" placeholder="ex : Dividendes">
+          </div>
+        </div>
+        <button class="confirm-btn" type="button" onclick="createCategory()">Créer la catégorie</button>
+      </div>
+
+      <button class="confirm-btn" onclick="doAdd()">Confirmer</button>
+    </div>
+  </div>
+
+</div><!-- /app -->
+
+<script src="js/data.js"></script>
+<script src="js/colors.js"></script>
+<script src="js/utils.js"></script>
+<script src="js/render.js"></script>
+<script src="js/actions.js"></script>
+<script src="js/storage.js"></script>
+<script src="js/main.js"></script>
+</body>
+</html>

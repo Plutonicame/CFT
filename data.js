@@ -1,0 +1,91 @@
+// Données
+
+// ════════════════════════════════════════════════════════
+//  DONNÉES
+// ════════════════════════════════════════════════════════
+const MO = ['Jan','Fév','Mar','Avr','Mai','Jun','Jul','Aoû','Sep','Oct','Nov','Déc'];
+const MO_F = ['Janvier','Février','Mars','Avril','Mai','Juin','Juillet','Août','Septembre','Octobre','Novembre','Décembre'];
+
+const CATS = {
+  revenus:        { label:'Revenus',        icon:'ti-trending-up',   bg:'#0d2e22', ic:'#22d3a0', bar:'#22d3a0', sign: 1 },
+  trading:        { label:'Trading',        icon:'ti-chart-candle',  bg:'#0d1e35', ic:'#3b9eff', bar:'#3b9eff', sign: 1 },
+  investissement: { label:'Investissement', icon:'ti-building-bank', bg:'#2a1c09', ic:'#f59e0b', bar:'#f59e0b', sign: 1 },
+  epargne:        { label:'Épargne',        icon:'ti-piggy-bank',    bg:'#1a1535', ic:'#a78bfa', bar:'#a78bfa', sign: 1 },
+  depot:          { label:'Dépôt compte',   icon:'ti-wallet',        bg:'#1a1a24', ic:'#888780', bar:'#888780', sign: 1 },
+  argent:         { label:'Argent liquide', icon:'ti-cash',          bg:'#0d2e22', ic:'#2dd4bf', bar:'#2dd4bf', sign: 1 },
+  depenses:       { label:'Dépenses',       icon:'ti-receipt',       bg:'#2d0f0f', ic:'#f43f5e', bar:'#f43f5e', sign:-1 },
+};
+
+const DB = {
+  2025: [
+    {cat:'revenus',desc:'Salaire',month:0,amt:3200},{cat:'revenus',desc:'Salaire',month:1,amt:3200},{cat:'revenus',desc:'Salaire',month:2,amt:3200},
+    {cat:'revenus',desc:'Salaire',month:3,amt:3200},{cat:'revenus',desc:'Salaire',month:4,amt:3400},{cat:'revenus',desc:'Salaire',month:5,amt:3400},
+    {cat:'revenus',desc:'Freelance',month:5,amt:800},{cat:'revenus',desc:'Salaire',month:6,amt:3400},{cat:'revenus',desc:'Salaire',month:7,amt:3400},
+    {cat:'revenus',desc:'Salaire',month:8,amt:3400},{cat:'revenus',desc:'Salaire',month:9,amt:3400},{cat:'revenus',desc:'Salaire',month:10,amt:3400},{cat:'revenus',desc:'Salaire',month:11,amt:3400},
+    {cat:'trading',desc:'SMC Long EUR/USD',month:0,amt:420},{cat:'trading',desc:'ICT Short NAS100',month:1,amt:-180},{cat:'trading',desc:'SMC Long Gold',month:2,amt:650},
+    {cat:'trading',desc:'ICT Short GBP/USD',month:3,amt:310},{cat:'trading',desc:'SMC Long NAS100',month:4,amt:890},{cat:'trading',desc:'SMC Short Oil',month:5,amt:-220},
+    {cat:'trading',desc:'ICT Long EUR/USD',month:6,amt:540},{cat:'trading',desc:'SMC Long Gold',month:7,amt:720},{cat:'trading',desc:'ICT Short EUR/USD',month:8,amt:-90},
+    {cat:'trading',desc:'SMC Long NAS100',month:9,amt:980},{cat:'trading',desc:'ICT Long GBP/USD',month:10,amt:430},{cat:'trading',desc:'SMC Long Gold',month:11,amt:1100},
+    {cat:'depenses',desc:'Loyer',month:0,amt:950},{cat:'depenses',desc:'Loyer',month:1,amt:950},{cat:'depenses',desc:'Loyer',month:2,amt:950},
+    {cat:'depenses',desc:'Loyer',month:3,amt:950},{cat:'depenses',desc:'Loyer',month:4,amt:950},{cat:'depenses',desc:'Loyer',month:5,amt:950},
+    {cat:'depenses',desc:'Loyer',month:6,amt:950},{cat:'depenses',desc:'Loyer',month:7,amt:950},{cat:'depenses',desc:'Loyer',month:8,amt:950},
+    {cat:'depenses',desc:'Loyer',month:9,amt:950},{cat:'depenses',desc:'Loyer',month:10,amt:950},{cat:'depenses',desc:'Loyer',month:11,amt:950},
+    {cat:'depenses',desc:'Courses',month:0,amt:360},{cat:'depenses',desc:'Courses',month:1,amt:340},{cat:'depenses',desc:'Courses',month:2,amt:355},
+    {cat:'depenses',desc:'Courses',month:3,amt:330},{cat:'depenses',desc:'Courses',month:4,amt:345},{cat:'depenses',desc:'Courses',month:5,amt:380},
+    {cat:'depenses',desc:'Courses',month:6,amt:390},{cat:'depenses',desc:'Courses',month:7,amt:400},{cat:'depenses',desc:'Courses',month:8,amt:360},
+    {cat:'depenses',desc:'Courses',month:9,amt:340},{cat:'depenses',desc:'Courses',month:10,amt:375},{cat:'depenses',desc:'Courses',month:11,amt:450},
+    {cat:'epargne',desc:'Livret A',month:0,amt:400},{cat:'epargne',desc:'Livret A',month:1,amt:400},{cat:'epargne',desc:'Livret A',month:2,amt:450},
+    {cat:'epargne',desc:'Livret A',month:3,amt:400},{cat:'epargne',desc:'Livret A',month:4,amt:400},{cat:'epargne',desc:'Livret A',month:5,amt:450},
+    {cat:'epargne',desc:'Livret A',month:6,amt:400},{cat:'epargne',desc:'Livret A',month:7,amt:400},{cat:'epargne',desc:'Livret A',month:8,amt:450},
+    {cat:'epargne',desc:'Livret A',month:9,amt:400},{cat:'epargne',desc:'Livret A',month:10,amt:450},{cat:'epargne',desc:'Livret A',month:11,amt:500},
+    {cat:'investissement',desc:'ETF MSCI World',month:0,amt:700},{cat:'investissement',desc:'ETF MSCI World',month:1,amt:700},{cat:'investissement',desc:'ETF MSCI World',month:2,amt:700},
+    {cat:'investissement',desc:'ETF MSCI World',month:3,amt:700},{cat:'investissement',desc:'ETF MSCI World',month:4,amt:800},{cat:'investissement',desc:'ETF MSCI World',month:5,amt:700},
+    {cat:'investissement',desc:'ETF MSCI World',month:6,amt:800},{cat:'investissement',desc:'ETF MSCI World',month:7,amt:800},{cat:'investissement',desc:'ETF MSCI World',month:8,amt:700},
+    {cat:'investissement',desc:'ETF MSCI World',month:9,amt:700},{cat:'investissement',desc:'ETF MSCI World',month:10,amt:900},{cat:'investissement',desc:'ETF MSCI World',month:11,amt:1000},
+    {cat:'depot',desc:'Compte courant',month:0,amt:500},{cat:'depot',desc:'Compte courant',month:3,amt:500},{cat:'depot',desc:'Compte courant',month:6,amt:500},{cat:'depot',desc:'Compte courant',month:9,amt:500},
+    {cat:'argent',desc:'Espèces',month:1,amt:120},{cat:'argent',desc:'Espèces',month:4,amt:100},{cat:'argent',desc:'Espèces',month:7,amt:150},{cat:'argent',desc:'Espèces',month:10,amt:120},
+  ],
+  2024: [
+    {cat:'revenus',desc:'Salaire',month:0,amt:2800},{cat:'revenus',desc:'Salaire',month:1,amt:2800},{cat:'revenus',desc:'Salaire',month:2,amt:2800},
+    {cat:'revenus',desc:'Salaire',month:3,amt:2900},{cat:'revenus',desc:'Salaire',month:4,amt:2900},{cat:'revenus',desc:'Salaire',month:5,amt:2900},
+    {cat:'revenus',desc:'Salaire',month:6,amt:2900},{cat:'revenus',desc:'Freelance',month:6,amt:500},
+    {cat:'revenus',desc:'Salaire',month:7,amt:3000},{cat:'revenus',desc:'Salaire',month:8,amt:3000},
+    {cat:'revenus',desc:'Salaire',month:9,amt:3000},{cat:'revenus',desc:'Salaire',month:10,amt:3000},{cat:'revenus',desc:'Salaire',month:11,amt:3000},{cat:'revenus',desc:'Bonus',month:11,amt:1200},
+    {cat:'trading',desc:'Long Gold',month:2,amt:180},{cat:'trading',desc:'Long EUR/USD',month:4,amt:320},{cat:'trading',desc:'Short NAS100',month:5,amt:-140},
+    {cat:'trading',desc:'Long EUR/USD',month:7,amt:410},{cat:'trading',desc:'Short GBP/USD',month:9,amt:260},{cat:'trading',desc:'Long Gold',month:11,amt:580},
+    {cat:'depenses',desc:'Loyer',month:0,amt:900},{cat:'depenses',desc:'Loyer',month:1,amt:900},{cat:'depenses',desc:'Loyer',month:2,amt:900},
+    {cat:'depenses',desc:'Loyer',month:3,amt:900},{cat:'depenses',desc:'Loyer',month:4,amt:900},{cat:'depenses',desc:'Loyer',month:5,amt:900},
+    {cat:'depenses',desc:'Loyer',month:6,amt:900},{cat:'depenses',desc:'Loyer',month:7,amt:900},{cat:'depenses',desc:'Loyer',month:8,amt:900},
+    {cat:'depenses',desc:'Loyer',month:9,amt:900},{cat:'depenses',desc:'Loyer',month:10,amt:900},{cat:'depenses',desc:'Loyer',month:11,amt:900},
+    {cat:'depenses',desc:'Courses',month:0,amt:350},{cat:'depenses',desc:'Courses',month:1,amt:320},{cat:'depenses',desc:'Courses',month:2,amt:340},
+    {cat:'depenses',desc:'Courses',month:3,amt:310},{cat:'depenses',desc:'Courses',month:4,amt:330},{cat:'depenses',desc:'Courses',month:5,amt:360},
+    {cat:'depenses',desc:'Courses',month:6,amt:370},{cat:'depenses',desc:'Courses',month:7,amt:380},{cat:'depenses',desc:'Courses',month:8,amt:340},
+    {cat:'depenses',desc:'Courses',month:9,amt:320},{cat:'depenses',desc:'Courses',month:10,amt:350},{cat:'depenses',desc:'Courses',month:11,amt:420},
+    {cat:'epargne',desc:'Livret A',month:0,amt:300},{cat:'epargne',desc:'Livret A',month:1,amt:300},{cat:'epargne',desc:'Livret A',month:2,amt:350},
+    {cat:'epargne',desc:'Livret A',month:3,amt:300},{cat:'epargne',desc:'Livret A',month:4,amt:300},{cat:'epargne',desc:'Livret A',month:5,amt:350},
+    {cat:'epargne',desc:'Livret A',month:6,amt:300},{cat:'epargne',desc:'Livret A',month:7,amt:300},{cat:'epargne',desc:'Livret A',month:8,amt:350},
+    {cat:'epargne',desc:'Livret A',month:9,amt:300},{cat:'epargne',desc:'Livret A',month:10,amt:350},{cat:'epargne',desc:'Livret A',month:11,amt:400},
+    {cat:'investissement',desc:'ETF MSCI World',month:0,amt:500},{cat:'investissement',desc:'ETF MSCI World',month:1,amt:500},{cat:'investissement',desc:'ETF MSCI World',month:2,amt:600},
+    {cat:'investissement',desc:'ETF MSCI World',month:3,amt:500},{cat:'investissement',desc:'ETF MSCI World',month:4,amt:500},{cat:'investissement',desc:'Crypto',month:5,amt:200},
+    {cat:'investissement',desc:'ETF MSCI World',month:6,amt:600},{cat:'investissement',desc:'ETF MSCI World',month:7,amt:600},{cat:'investissement',desc:'ETF MSCI World',month:8,amt:500},
+    {cat:'investissement',desc:'ETF MSCI World',month:9,amt:500},{cat:'investissement',desc:'ETF MSCI World',month:10,amt:700},{cat:'investissement',desc:'ETF MSCI World',month:11,amt:800},
+    {cat:'depot',desc:'Compte courant',month:0,amt:400},{cat:'depot',desc:'Compte courant',month:3,amt:400},{cat:'depot',desc:'Compte courant',month:6,amt:400},{cat:'depot',desc:'Compte courant',month:9,amt:400},
+    {cat:'argent',desc:'Espèces',month:1,amt:100},{cat:'argent',desc:'Espèces',month:4,amt:80},{cat:'argent',desc:'Espèces',month:7,amt:120},{cat:'argent',desc:'Espèces',month:10,amt:100},
+  ],
+  2026: [
+    {cat:'revenus',desc:'Salaire',month:0,amt:3600},{cat:'revenus',desc:'Salaire',month:1,amt:3600},{cat:'revenus',desc:'Salaire',month:2,amt:3600},
+    {cat:'revenus',desc:'Salaire',month:3,amt:3600},{cat:'revenus',desc:'Salaire',month:4,amt:3600},{cat:'revenus',desc:'Freelance',month:4,amt:1200},
+    {cat:'trading',desc:'SMC Long Gold',month:0,amt:780},{cat:'trading',desc:'ICT Long NAS100',month:1,amt:1200},{cat:'trading',desc:'SMC Short EUR/USD',month:2,amt:-300},
+    {cat:'trading',desc:'ICT Long Gold',month:3,amt:1450},{cat:'trading',desc:'SMC Long NAS100',month:4,amt:1890},
+    {cat:'depenses',desc:'Loyer',month:0,amt:1000},{cat:'depenses',desc:'Loyer',month:1,amt:1000},{cat:'depenses',desc:'Loyer',month:2,amt:1000},
+    {cat:'depenses',desc:'Loyer',month:3,amt:1000},{cat:'depenses',desc:'Loyer',month:4,amt:1000},
+    {cat:'depenses',desc:'Courses',month:0,amt:380},{cat:'depenses',desc:'Courses',month:1,amt:360},{cat:'depenses',desc:'Courses',month:2,amt:370},
+    {cat:'depenses',desc:'Courses',month:3,amt:350},{cat:'depenses',desc:'Courses',month:4,amt:365},
+    {cat:'epargne',desc:'Livret A',month:0,amt:500},{cat:'epargne',desc:'Livret A',month:1,amt:500},{cat:'epargne',desc:'Livret A',month:2,amt:500},
+    {cat:'epargne',desc:'Livret A',month:3,amt:500},{cat:'epargne',desc:'Livret A',month:4,amt:600},
+    {cat:'investissement',desc:'ETF MSCI World',month:0,amt:1000},{cat:'investissement',desc:'ETF MSCI World',month:1,amt:1000},{cat:'investissement',desc:'ETF MSCI World',month:2,amt:1100},
+    {cat:'investissement',desc:'ETF MSCI World',month:3,amt:1000},{cat:'investissement',desc:'ETF MSCI World',month:4,amt:1100},
+    {cat:'depot',desc:'Compte courant',month:0,amt:600},{cat:'depot',desc:'Compte courant',month:3,amt:600},
+    {cat:'argent',desc:'Espèces',month:1,amt:150},{cat:'argent',desc:'Espèces',month:3,amt:130},
+  ]
+};
