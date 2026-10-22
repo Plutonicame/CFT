@@ -26,9 +26,9 @@ function applyCSSColors() {
   document.documentElement.style.setProperty('--pos', CLR.pos);
   document.documentElement.style.setProperty('--neg', CLR.neg);
 }
-function setColor(k, v) { CLR[k] = v; applyCSSColors(); syncSwatches(); renderAll(); }
-function setChart(i, v) { CLR.charts[i] = v; syncSwatches(); renderAll(); }
-function setCatColor(cat, prop, v) { CLR.cats[cat][prop] = v; CATS[cat][prop] = v; syncSwatches(); renderAll(); }
+function setColor(k, v) { CLR[k] = v; applyCSSColors(); syncSwatches(); renderAll(); autoSave(); }
+function setChart(i, v) { CLR.charts[i] = v; syncSwatches(); renderAll(); autoSave(); }
+function setCatColor(cat, prop, v) { CLR.cats[cat][prop] = v; CATS[cat][prop] = v; syncSwatches(); renderAll(); autoSave(); }
 function resetColors() {
   const customCats = {};
   Object.keys(CATS).forEach(k => { if (!DFLTS.cats[k]) customCats[k] = JSON.parse(JSON.stringify(CLR.cats[k])); });
@@ -37,7 +37,7 @@ function resetColors() {
   Object.keys(CATS).forEach(k => {
     if (CLR.cats[k]) { CATS[k].bg = CLR.cats[k].bg; CATS[k].ic = CLR.cats[k].ic; CATS[k].bar = CLR.cats[k].bar; }
   });
-  applyCSSColors(); buildCatSwatches(); syncSwatches(); renderAll();
+  applyCSSColors(); buildCatSwatches(); syncSwatches(); renderAll(); autoSave();
 }
 function setSwatch(id, val) {
   const el = document.getElementById(id);

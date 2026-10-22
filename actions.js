@@ -54,6 +54,7 @@ function doAdd() {
   document.getElementById('aDesc').value = '';
   document.getElementById('aAmt').value  = '';
   renderAll();
+  autoSave();
 }
 
 // ════════════════════════════════════════════════════════
@@ -92,6 +93,7 @@ function createCategory() {
   document.getElementById('newCatBox').style.display = 'none';
   buildCatSwatches();
   syncSwatches();
+  autoSave();
 }
 
 // ── Menu déroulant personnalisé (catégorie) avec suppression inline ──
