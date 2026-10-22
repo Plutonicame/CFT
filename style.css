@@ -386,3 +386,25 @@
   .google-btn:active { transform: scale(.98); }
   .login-error { min-height: 18px; margin-top: 14px; font-size: 12px; color: var(--neg); font-weight: 600; }
   .sync-state { font-size: 18px; display: inline-flex; align-items: center; color: var(--txt3); }
+
+  /* ── TJP (liaison journal de trading) ── */
+  .tjp-box { background: var(--bg2); border: 1px solid var(--border); border-radius: 16px; padding: 1rem 1.25rem; margin-bottom: 1.5rem; }
+  .tjp-head { display: flex; align-items: center; justify-content: space-between; gap: 10px; flex-wrap: wrap; }
+  .tjp-title { font-size: 13px; font-weight: 700; color: var(--txt); display: flex; align-items: center; gap: 8px; }
+  .tjp-actions { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+  .tjp-btn { display: inline-flex; align-items: center; gap: 6px; padding: 8px 12px; border-radius: 8px; border: 1px solid var(--border);
+    background: var(--bg3); color: var(--txt2); font-family: inherit; font-size: 12px; font-weight: 700; cursor: pointer; }
+  .tjp-btn:hover:not(:disabled) { background: var(--bg4); color: var(--txt); }
+  .tjp-btn:disabled { opacity: .5; cursor: default; }
+  .tjp-btn-main { border-color: var(--pos); color: var(--pos); }
+  .tjp-sub { font-size: 12px; color: var(--txt3); margin-top: 8px; font-weight: 500; }
+  .tjp-spin { font-size: 12px; color: var(--txt2); }
+  .tjp-chips { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
+  .tjp-chip { font-size: 11px; font-weight: 600; color: var(--txt2); background: var(--bg3); border: 1px solid var(--border); border-radius: 999px; padding: 3px 10px; }
+  .tjp-note { font-size: 12px; font-weight: 600; margin-top: 8px; }
+  .tjp-ok { color: var(--pos); }
+  .tjp-bad { color: var(--neg); }
+  .tjp-badge { display: inline-block; font-size: 10px; font-weight: 800; letter-spacing: .06em; color: var(--txt); background: var(--accent);
+    border-radius: 5px; padding: 2px 6px; margin-right: 8px; vertical-align: middle; }
+  .tbl-locked { font-size: 13px; color: var(--txt2); align-items: center; }
+  .tbl-locked > div { padding: 6px 8px; }

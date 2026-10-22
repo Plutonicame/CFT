@@ -29,6 +29,7 @@ async function startApp(session) {
   if (first) selectCat(first);
   renderCatSelect();
   renderAll();
+  tjpInit().catch(() => {});
 }
 
 // Session déjà ouverte (ou retour de Google) ?

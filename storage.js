@@ -71,7 +71,7 @@ async function fetchAllTransactions() {
   let all = [], from = 0;
   while (true) {
     const { data, error } = await sb.from('transactions')
-      .select('id,year,month,cat,descr,amt').order('id').range(from, from + 999);
+      .select('id,year,month,cat,descr,amt,tjp_import_id').order('id').range(from, from + 999);
     if (error) throw error;
     all = all.concat(data);
     if (data.length < 1000) break;
@@ -130,6 +130,7 @@ async function loadRemote() {
       const y = r.year;
       if (!DB[y]) DB[y] = [];
       const e = { id: r.id, cat: r.cat, desc: r.descr, month: r.month, amt: Number(r.amt) };
+      if (r.tjp_import_id) e.tjp = r.tjp_import_id;   // importée depuis TJP : non modifiable
       DB[y].push(e);
       snap.tx.set(r.id, txSig(e, y));
     });

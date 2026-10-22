@@ -300,6 +300,17 @@ function renderDataTable() {
 
     catEntries.forEach(e => {
       const gi = entries.indexOf(e);
+      if (e.tjp) {
+        // Transaction importée de TJP : lecture seule
+        html += '<div class="tbl-row tbl-locked">'
+          + '<div><span class="tjp-badge">TJP</span>'+escHtml(e.desc)+'</div>'
+          + '<div>'+MO[e.month]+'</div>'
+          + '<div>'+escHtml(CATS[e.cat].label)+'</div>'
+          + '<div style="text-align:right">'+e.amt+'</div>'
+          + '<div style="text-align:center;color:var(--txt3)"><i class="ti ti-lock"></i></div>'
+          + '</div>';
+        return;
+      }
       const moOpts = MO.map((mo,i) => '<option value="'+i+'"'+(i===e.month?' selected':'')+'>'+mo+'</option>').join('');
       const catOpts = Object.keys(CATS).map(k => '<option value="'+k+'"'+(k===e.cat?' selected':'')+'>'+CATS[k].label+'</option>').join('');
       html += '<div class="tbl-row">'
@@ -323,7 +334,7 @@ function toggleSection(bodyId, arrowId) {
   if (arrow) arrow.classList.toggle('open');
 }
 function upd(y, idx, field, val) {
-  if (DB[y] && DB[y][idx]) {
+  if (DB[y] && DB[y][idx] && !DB[y][idx].tjp) {
     DB[y][idx][field] = val;
     // Même normalisation que doAdd() : si le montant ou la catégorie change,
     // on force une magnitude positive pour les catégories de type "dépense".
@@ -333,7 +344,7 @@ function upd(y, idx, field, val) {
   autoSave();
 }
 function del(y, idx) {
-  if (!DB[y]) return;
+  if (!DB[y] || (DB[y][idx] && DB[y][idx].tjp)) return;
   const openSections = [];
   document.querySelectorAll('.tbl-body.open').forEach(el => openSections.push(el.id));
   DB[y].splice(idx, 1);
@@ -353,7 +364,7 @@ function delAllCat(y, cat) {
   const openSections = [];
   document.querySelectorAll('.tbl-body.open').forEach(el => openSections.push(el.id));
   // Supprime toutes les entrées de cette catégorie pour cette année
-  DB[y] = DB[y].filter(e => e.cat !== cat);
+  DB[y] = DB[y].filter(e => e.cat !== cat || e.tjp);   // les lignes TJP ne se suppriment pas à la main
   autoSave();
   renderAll();
   // Réouvre les sections (sauf celle qu'on vient de vider si elle n'existe plus)
